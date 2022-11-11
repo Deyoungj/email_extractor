@@ -2,6 +2,15 @@ import requests, re
 from bs4 import BeautifulSoup
 
 
+class Extaract:
+    
+    def get_email(self):
+        pass
+
+    def get_phone(self):
+        self
+    
+
 
 EMAIL_REX = r'[\w\.]+@[\w\.]+'
 
@@ -11,3 +20,4 @@ r = requests.get(url)
 
 
 print(BeautifulSoup(r.text).prettify())
+
