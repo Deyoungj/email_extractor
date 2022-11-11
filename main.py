@@ -8,7 +8,7 @@ class Extaract:
         pass
 
     def get_phone(self):
-        self
+        pass
     
 
 
