@@ -2,7 +2,7 @@ import requests, re
 from bs4 import BeautifulSoup
 
 
-class Extaract:
+class Extract:
     def __init__(self, url:list=[]):
         self.url = url
         self.email_rex = r'[\w\.]+@[\w\.]+'
