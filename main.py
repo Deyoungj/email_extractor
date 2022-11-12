@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 
 
 class Extaract:
+    def __init__(self, url:list=[]):
+        self.url = url
+        self.email_rex = r'[\w\.]+@[\w\.]+'
     
     def get_email(self):
         pass
