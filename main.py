@@ -1,52 +1,54 @@
 import requests, re
 from bs4 import BeautifulSoup
+from collections import deque
+from urllib.parse import urlsplit
 
 
-class Extract:
-    def __init__(self, url:list=[]):
-        self.url = url
-        self.email_rex = r'[\w\.]+@[\w\.]+'
+
+
+
+def parse_email(url: str):
+
+    if url.startswith("https://"):
+        url = url
+    else:
+        url = "https://"+url
+
+    # queue of urls to be crawled
+    unprocessed_urls = deque([])
+
+    # set of already crawled urls for email
+    processed_urls = set()
+
+    # emails extracted
+    emails = set()
+
+    # url = "https://www.google.com/search?q=business+emails+in+the+united+kindom&oq=business+emails+in+the+united+kindom&aqs=chrome..69i57j33i10i160l3.34218j0j7&sourceid=chrome&ie=UTF-8"
+
+    url_parts = urlsplit(url)
+    print(url_parts)
+
+    base_url = f"{url_parts.scheme}://{url_parts.netloc}"
+
+    r = requests.get(url)
+    print(r.status_code)
+
+    soup = BeautifulSoup(r.text, "html.parser")
     
-    def get_email(self):
-        pass
-
-    def get_phone(self):
-        pass
-    
-text = """ 
-    Random Email Addresses:
-RERUNOPTIONS
 
 
-gospodin@live.com
-heidrich@yahoo.ca
-slanglois@aol.com
-wkrebs@yahoo.com
-improv@live.com
-dialworld@hotmail.com
-gravyface@mac.com
-ramollin@comcast.net
-tlinden@yahoo.ca
-lbaxter@live.com
-lbaxter@me.com
-clkao@sbcglobal.net
+    # print(soup.prettify())
+
+    # for mail in re.findall(EMAIL_REX, r.text):
+
+    #     print(mail)
+
+parse_email("https://miet.ac.in/")
 
 
-names
-
-"""
-
-EMAIL_REX = r'[\w\.-]+@[\w\.-]+'
-# https://www.randomlists.com/email-addresses
-
-url = "https://stackoverflow.com/questions/70325910/extract-email-and-phone-numbers-from-website-using-python-and-scrapy"
-
-# r = requests.get(url)
-# print(r.status_code)
-
-for mail in re.findall(EMAIL_REX, text):
-    print(mail)
 
 
-# print(BeautifulSoup(r.text).prettify())
+
+
+
 
