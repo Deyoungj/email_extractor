@@ -33,10 +33,20 @@ def parse_email(url: str):
     r = requests.get(url)
     print(r.status_code)
 
+
     soup = BeautifulSoup(r.text, "html.parser")
     
+    links = soup.find_all('a', href=True)
+
+    link_list = set([link["href"] for link in links if link["href"] and link["href"].startswith("https://")])
+
+    print(len(link_list))
 
 
+    # filtered_links = set(filter(lambda link: link["href"], link_list))
+    # print(filtered_links)
+    # for link in link_list:
+    #     print(link["href"])
     # print(soup.prettify())
 
     # for mail in re.findall(EMAIL_REX, r.text):
