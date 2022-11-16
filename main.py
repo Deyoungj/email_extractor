@@ -1,7 +1,7 @@
 import requests, re
 from bs4 import BeautifulSoup
 from collections import deque
-from urllib.parse import urlsplit
+
 
 
 
@@ -25,12 +25,11 @@ def parse_email(url: str):
 
     # url = "https://www.google.com/search?q=business+emails+in+the+united+kindom&oq=business+emails+in+the+united+kindom&aqs=chrome..69i57j33i10i160l3.34218j0j7&sourceid=chrome&ie=UTF-8"
 
-    url_parts = urlsplit(url)
-    print(url_parts)
 
-    base_url = f"{url_parts.scheme}://{url_parts.netloc}"
-
-    r = requests.get(url)
+    try:
+        r = requests.get(url)
+    except:
+        pass
     print(r.status_code)
 
 
@@ -43,8 +42,6 @@ def parse_email(url: str):
     print(len(link_list))
 
 
-    # filtered_links = set(filter(lambda link: link["href"], link_list))
-    # print(filtered_links)
     # for link in link_list:
     #     print(link["href"])
     # print(soup.prettify())
