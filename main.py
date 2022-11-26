@@ -3,9 +3,19 @@ from bs4 import BeautifulSoup
 from collections import deque
 
 
+def get_url(url: str ):
+    
+    try:
+        response = requests.get(url)
+    except:
+        pass
+    print(response.status_code)
+    return response
 
 
-
+def parse_html(url: str):
+    soup = BeautifulSoup(requests.get(url).text, "html.parser")
+    return soup
 
 def parse_email(url: str):
 
