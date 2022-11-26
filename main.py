@@ -5,6 +5,11 @@ from collections import deque
 
 def get_url(url: str ):
     
+    if url.startswith("https://"):
+        url = url
+    else:
+        url = "https://"+url
+    
     try:
         response = requests.get(url)
     except:
@@ -17,12 +22,10 @@ def parse_html(url: str):
     soup = BeautifulSoup(requests.get(url).text, "html.parser")
     return soup
 
-def parse_email(url: str):
 
-    if url.startswith("https://"):
-        url = url
-    else:
-        url = "https://"+url
+def main(url: str):
+
+    
 
     # queue of urls to be crawled
     unprocessed_urls = deque([])
@@ -60,7 +63,7 @@ def parse_email(url: str):
 
     #     print(mail)
 
-parse_email("https://miet.ac.in/")
+main("https://miet.ac.in/")
 
 
 
