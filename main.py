@@ -4,7 +4,7 @@ from collections import deque
 
 
 def get_url(url: str ):
-    
+
     if url.startswith("https://"):
         url = url
     else:
@@ -18,10 +18,14 @@ def get_url(url: str ):
     return response
 
 
-def parse_html(url: str):
-    soup = BeautifulSoup(requests.get(url).text, "html.parser")
+def parse_html(response: requests):
+    soup = BeautifulSoup(requests.get(response).text, "html.parser")
     return soup
 
+
+def get_links(soup: BeautifulSoup):
+    links = soup.find_all("a")
+    return links
 
 def main(url: str):
 
