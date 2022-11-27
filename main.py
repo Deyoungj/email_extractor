@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from collections import deque
 
 
+# get url response
 def get_url(url: str ):
 
     if url.startswith("https://"):
@@ -14,18 +15,29 @@ def get_url(url: str ):
         response = requests.get(url)
     except:
         pass
-    print(response.status_code)
+    print('status code : ',response.status_code)
+
     return response
 
 
+def filter_links(links: list) -> set:
+    link_list = set([link["href"] for link in links if link["href"] and link["href"].startswith("https://")])
+
+    return link_list
+
+
+
 def parse_html(response: requests):
-    soup = BeautifulSoup(requests.get(response).text, "html.parser")
+    soup = BeautifulSoup(response.text, "html.parser")
     return soup
 
 
+
 def get_links(soup: BeautifulSoup):
-    links = soup.find_all("a")
+    links = soup.find_all("a", html=True)
     return links
+
+
 
 def main(url: str):
 
@@ -42,22 +54,14 @@ def main(url: str):
 
     # url = "https://www.google.com/search?q=business+emails+in+the+united+kindom&oq=business+emails+in+the+united+kindom&aqs=chrome..69i57j33i10i160l3.34218j0j7&sourceid=chrome&ie=UTF-8"
 
+    url = get_url(url)
 
-    try:
-        r = requests.get(url)
-    except:
-        pass
-    print(r.status_code)
+    parsed_html = parse_html(url)
 
+    links = get_links(parsed_html)
 
-    soup = BeautifulSoup(r.text, "html.parser")
-    
-    links = soup.find_all('a', href=True)
-
-    link_list = set([link["href"] for link in links if link["href"] and link["href"].startswith("https://")])
-
-    print(len(link_list))
-
+    filtered_links = filter_links(links)
+    print(filtered_links)
 
     # for link in link_list:
     #     print(link["href"])
