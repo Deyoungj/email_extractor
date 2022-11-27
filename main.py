@@ -60,6 +60,7 @@ def main(url: str):
 
     links = get_links(parsed_html)
 
+    print(links)
     filtered_links = filter_links(links)
     print(filtered_links)
 
