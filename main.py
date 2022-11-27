@@ -15,7 +15,7 @@ def get_url(url: str ):
         response = requests.get(url)
     except:
         pass
-    print('status code : ',response.status_code)
+    
 
     return response
 
@@ -34,7 +34,7 @@ def parse_html(response):
 
 
 def get_links(soup):
-    links = soup.find_all("a", html=True)
+    links = soup.find_all("a")
     return links
 
 
@@ -54,15 +54,16 @@ def main(url: str):
 
     # url = "https://www.google.com/search?q=business+emails+in+the+united+kindom&oq=business+emails+in+the+united+kindom&aqs=chrome..69i57j33i10i160l3.34218j0j7&sourceid=chrome&ie=UTF-8"
 
-    url = get_url(url)
+    response = get_url(url)
+    soup = parse_html(response)
+    links = get_links(soup)
+    filtered = filter_links(links)
+    print(filtered)
 
-    parsed_html = parse_html(url)
 
-    links = get_links(parsed_html)
 
-    print(links)
-    filtered_links = filter_links(links)
-    print(filtered_links)
+    print('status code : ',response.status_code)
+
 
     # for link in link_list:
     #     print(link["href"])
