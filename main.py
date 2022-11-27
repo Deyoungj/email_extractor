@@ -27,13 +27,13 @@ def filter_links(links: list) -> set:
 
 
 
-def parse_html(response: requests):
+def parse_html(response):
     soup = BeautifulSoup(response.text, "html.parser")
     return soup
 
 
 
-def get_links(soup: BeautifulSoup):
+def get_links(soup):
     links = soup.find_all("a", html=True)
     return links
 
