@@ -39,15 +39,35 @@ def get_links(soup):
     return links
 
 
-
-def process_nested_links(links: list):
+def extract_email(links: list):
 
     # unprocessed_nested urls
     unprocessed_urls = deque(links)
 
+    processed_links = set()
+
+    # emails extracted
+    emails = set()
+
+
 
     while len(unprocessed_urls) > 0:
-        pass
+        url = unprocessed_urls.popleft()
+        processed_links.add(url)
+        
+        try:
+          response = requests.get(url)
+        except:
+
+          continue
+
+        new_email = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.com", response.text, re.I)
+        for mail in new_email:
+
+            print(new_email)
+        # emails.add(new_email)
+
+    return processed_links, emails
 
 
 
@@ -61,8 +81,7 @@ def main(url: str):
     # set of already crawled urls for email
     processed_urls = set()
 
-    # emails extracted
-    emails = set()
+    
 
     # url = "https://www.google.com/search?q=business+emails+in+the+united+kindom&oq=business+emails+in+the+united+kindom&aqs=chrome..69i57j33i10i160l3.34218j0j7&sourceid=chrome&ie=UTF-8"
 
@@ -71,14 +90,17 @@ def main(url: str):
     links = get_links(soup)
     filtered = filter_links(links)
     unprocessed_urls.extend(filtered)
+    unprocessed_urls.appendleft(url)
+    print(len(unprocessed_urls))
+    new_email = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.com", response.text, re.I)
+    print(new_email)
+    # for mail in new_email:
+
+    #     print(new_email)
     
     # while unprocessed_urls:
     #     pass
-    print(unprocessed_urls)
 
-
-
-    print('status code : ',response.status_code)
 
 
     # for link in link_list:
@@ -89,8 +111,7 @@ def main(url: str):
 
     #     print(mail)
 
-main("https://miet.ac.in/")
-
+main("https://www.google.com/search?q=construction+paint+company+Illinois+%40hotmail.com&biw=1280&bih=667&sxsrf=ALiCzsYXIBI32sS0XVFcDctLfoV5sLwRxA%3A1669734883330&ei=4yGGY9DjE6LosAf30IGoAQ&ved=0ahUKEwiQ4duU19P7AhUiNOwKHXdoABUQ4dUDCBE&uact=5&oq=construction+paint+company+Illinois+%40hotmail.com&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIEMgcIABAeEKIEOggIABCiBBCwAzoKCAAQHhCiBBCwA0oECEEYAUoECEYYAFCgEljlFWDgH2gCcAB4AIAB-QOIAbQHkgEFNC0xLjGYAQCgAQGgAQLIAQPAAQE&sclient=gws-wiz-serp")
 
 
 
