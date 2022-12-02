@@ -3,11 +3,9 @@ from bs4 import BeautifulSoup
 from collections import deque
 
 
-
-
-def process_links(url: str , length: int = 5):
+def process_links(url: str , length: int = 10):
     
-    unprocessed_links = deque()
+    unprocessed_links = deque([])
 
     processed_url = []
     emails  = set()
@@ -23,7 +21,7 @@ def process_links(url: str , length: int = 5):
 
         url = unprocessed_links.popleft()
         processed_url.append(url)
-
+        
         if url.startswith("https://"):
             url = url
         else:
@@ -33,6 +31,9 @@ def process_links(url: str , length: int = 5):
             response = requests.get(url)
         except:
             pass
+
+        print(f"[{count}]**  processing link: [{url}] **status: [{response.status_code}] ")
+
 
         new_email = re.findall(r"[\w\.-]+@[\w\.-]+", response.text, re.I)
         emails.update(new_email)
@@ -51,6 +52,7 @@ def process_links(url: str , length: int = 5):
 
 
 
+        
 
 
 
@@ -58,7 +60,10 @@ def process_links(url: str , length: int = 5):
 
 
 
-def extract_email(links: list):
+
+
+
+def extract_email(link):
 
     # unprocessed_nested urls
     unprocessed_urls = deque(links)
@@ -97,21 +102,6 @@ def main(url: str):
     # set of already crawled urls for email
     processed_urls = set()
 
-    
-
-    # url = "https://www.google.com/search?q=business+emails+in+the+united+kindom&oq=business+emails+in+the+united+kindom&aqs=chrome..69i57j33i10i160l3.34218j0j7&sourceid=chrome&ie=UTF-8"
-
-    response = get_url(url)
-    # soup = parse_html(response)
-    # links = get_links(soup)
-    # filtered = filter_links(links)
-    # unprocessed_urls.extend(filtered)
-    # unprocessed_urls.appendleft(url)
-    # print(len(unprocessed_urls))
-    # # new_email = re.findall(r"[\w\.-]+@[\w\.-]+", response.text, re.I)
-    # # print(new_email)
-    # extract_email(filtered)
-    print(response.text)
 
 main("https://www.google.com/search?q=construction+paint+company+Illinois+%40hotmail.com&biw=1280&bih=667&sxsrf=ALiCzsYXIBI32sS0XVFcDctLfoV5sLwRxA%3A1669734883330&ei=4yGGY9DjE6LosAf30IGoAQ&ved=0ahUKEwiQ4duU19P7AhUiNOwKHXdoABUQ4dUDCBE&uact=5&oq=construction+paint+company+Illinois+%40hotmail.com&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIEMgcIABAeEKIEOggIABCiBBCwAzoKCAAQHhCiBBCwA0oECEEYAUoECEYYAFCgEljlFWDgH2gCcAB4AIAB-QOIAbQHkgEFNC0xLjGYAQCgAQGgAQLIAQPAAQE&sclient=gws-wiz-serp")
 
