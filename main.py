@@ -52,46 +52,6 @@ def process_links(url: str , length: int = 10):
 
 
 
-        
-
-
-
-
-
-
-
-
-
-
-def extract_email(link):
-
-    # unprocessed_nested urls
-    unprocessed_urls = deque(links)
-
-    processed_links = set()
-
-    # emails extracted
-    emails = set()
-
-
-
-    while len(unprocessed_urls) > 0:
-        url = unprocessed_urls.popleft()
-        processed_links.add(url)
-        
-        try:
-          response = requests.get(url)
-        except:
-
-          continue
-
-        new_email = re.findall(r"[\w\.-]+@[\w\.-]+", response.text, re.I)
-        # emails.add(new_email)
-
-    return processed_links, emails
-
-
-
 def main(url: str):
 
     
