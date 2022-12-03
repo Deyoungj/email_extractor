@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from collections import deque
 import urllib
 
-def process_links(url: str , length: int = 100, email_type: str = ".") -> list:
+def process_links(url: str , length: int = 10, email_type: str = ".") -> list:
     
     unprocessed_links = deque([url])
 
@@ -73,12 +73,18 @@ def main(url: str):
     # set of already crawled urls for email
     processed_urls = set()
 
-    mail = process_links(url)
-    print(mail)
+    mails = process_links(url)
+
+    for mail in mails :
+        with open("mails.txt", "a") as f:
+            f.write(mail+"\n")
+    
+    print("files has been added to mail.txt")
+    
 
 
 
-main("https://www.google.com/search?q=company+real+estate+washington+%40hotmail.com&sxsrf=ALiCzsZ7w7ytJXycC2WcdNXH_C7_RwAnLQ%3A1669986008415&ei=2PaJY5nvGK3P7_UPvfSJ8AY&oq=com&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQARgAMgQIIxAnMgQIIxAnMgQIIxAnMgQIABBDMgsIABCABBCxAxCDATIRCC4QgAQQsQMQgwEQxwEQ0QMyEQguEIAEELEDEIMBEMcBENEDMgsIABCABBCxAxCDATIICAAQgAQQsQMyCAguEIAEELEDOgcIIxDqAhAnOgUIABCABDoICC4QsQMQgwFKBAhBGABKBAhGGABQAFjjJGDXQ2gBcAF4AIAB-gWIAbsQkgEFNS0xLjKYAQCgAQGwAQrAAQE&sclient=gws-wiz-serp")
+main("https://www.google.com/search?q=truck+contract+of+kent+email+%22%40hotmail.com%22+%40outlook.com%22-issuu+-scam&oq=truck+contract+of+kent+email+%22%40hotmail.com%22+%40outlook.com%22-issuu+-scam&aqs=chrome..69i57.120518j0j7&sourceid=chrome&ie=UTF-8")
 
 
 
