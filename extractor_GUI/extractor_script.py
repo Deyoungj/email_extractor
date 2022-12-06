@@ -65,11 +65,7 @@ def process_link(url: str , length: int , email_type: str) -> list:
 
 def extract(url: list, length: int = 5, email_type: str = ".") -> set:
 
-    
-    # all = "all"
-    # hotmail = "hotmail"
-    # gmail = "gmail"
-    # outlook = "outlook"
+
 
     # queue of urls to be crawled
     unprocessed_urls = deque(url)

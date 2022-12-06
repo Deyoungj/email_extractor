@@ -2,7 +2,7 @@ from extractor_ui import Ui_mainWindow
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 import threading
-from extractor_script.extractor import extract
+from extractor_script import extract
 
 
 
@@ -47,11 +47,11 @@ class Ui_Window(QtWidgets.QMainWindow):
         sys.stdout = Stream(newText=self.onUpdateText)
 
     def onUpdateText(self, text):
-        cursor = self.ui.extracted_emails.textCursor()
+        cursor = self.ui.process_output.textCursor()
         cursor.movePosition(QtGui.QTextCursor.End)
         cursor.insertText(text)
-        self.ui.extracted_emails.setTextCursor(cursor)
-        self.ui.extracted_emails.ensureCursorVisible()
+        self.ui.process_output.setTextCursor(cursor)
+        self.ui.process_output.ensureCursorVisible()
 
     def __del__(self):
         sys.stdout = sys.__stdout__
@@ -66,8 +66,8 @@ class Ui_Window(QtWidgets.QMainWindow):
     def link_extract(self):
         print(self.depth)
 
-        t1 = threading.Thread(target=self.gg)
-        t1.start()
+        t1 = threading.Thread(target=extract, args=())
+        # t1.start()
         
         
 
