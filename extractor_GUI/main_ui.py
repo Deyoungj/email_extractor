@@ -58,10 +58,10 @@ class Ui_Window(QtWidgets.QMainWindow):
 
 
     
-    def gg(self):
-        for n in range(5):
-            time.sleep(1)
-            print("processing" + str(n))
+    # def gg(self):
+    #     for n in range(5):
+    #         time.sleep(1)
+    #         print("processing" + str(n))
 
     def link_extract(self):
         print(self.depth)
