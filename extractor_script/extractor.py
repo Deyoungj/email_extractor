@@ -63,7 +63,7 @@ def process_link(url: str , length: int , email_type: str) -> list:
 
 
 
-def main(url: list, length: int = 5, email_type: str = "."):
+def extract(url: list, length: int = 5, email_type: str = ".") -> set:
 
     
     # all = "all"
@@ -94,20 +94,22 @@ def main(url: list, length: int = 5, email_type: str = "."):
             all_emails.add(mail)
 
 
-    for mail in mails :
-        with open("mails.txt", "a") as f:
-            f.write(mail+"\n")
+    # for mail in mails :
+    #     with open("mails.txt", "a") as f:
+    #         f.write(mail+"\n")
     
-    print("all emails has been saved ")
+    # print("all emails has been saved ")
+
+    return all_emails
     
 
 
 
-main([
-    "https://www.google.com/search?q=truck+contract+of+kent+email+%22%40hotmail.com%22+%40outlook.com%22-issuu+-scam&oq=truck+contract+of+kent+email+%22%40hotmail.com%22+%40outlook.com%22-issuu+-scam&aqs=chrome..69i57.120518j0j7&sourceid=chrome&ie=UTF-8",
+# extract([
+#     "https://www.google.com/search?q=truck+contract+of+kent+email+%22%40hotmail.com%22+%40outlook.com%22-issuu+-scam&oq=truck+contract+of+kent+email+%22%40hotmail.com%22+%40outlook.com%22-issuu+-scam&aqs=chrome..69i57.120518j0j7&sourceid=chrome&ie=UTF-8",
 
-    "https://www.google.com/search?q=company+real+estate+washington+%40hotmail.com&oq=compa&aqs=chrome.0.69i59j69i57j69i59l2j0i67l3j0i433i512j0i67l2.10644j0j7&sourceid=chrome&ie=UTF-8"
-])
+#     "https://www.google.com/search?q=company+real+estate+washington+%40hotmail.com&oq=compa&aqs=chrome.0.69i59j69i57j69i59l2j0i67l3j0i433i512j0i67l2.10644j0j7&sourceid=chrome&ie=UTF-8"
+# ])
 
 
 
