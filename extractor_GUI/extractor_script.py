@@ -96,7 +96,8 @@ def extract(url: list, length: int = 5, email_type: str = ".") -> set:
     
     # print("all emails has been saved ")
 
-    return all_emails
+    for m in all_emails:
+        print(m)
     
 
 

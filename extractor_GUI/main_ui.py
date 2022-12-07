@@ -1,8 +1,14 @@
 from extractor_ui import Ui_mainWindow
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
+import concurrent.futures
 import threading
 from extractor_script import extract
+import requests, re
+from bs4 import BeautifulSoup
+from collections import deque
+import urllib
+
 
 
 
@@ -41,38 +47,152 @@ class Ui_Window(QtWidgets.QMainWindow):
 
         
         # depth of the link
-        self.depth = self.ui.depth.value()
-
+        
+        self.output = self.ui.extracted_emails
 
         sys.stdout = Stream(newText=self.onUpdateText)
 
+
+
     def onUpdateText(self, text):
-        cursor = self.ui.process_output.textCursor()
+        cursor = self.output.textCursor()
         cursor.movePosition(QtGui.QTextCursor.End)
         cursor.insertText(text)
-        self.ui.process_output.setTextCursor(cursor)
-        self.ui.process_output.ensureCursorVisible()
+        self.output.setTextCursor(cursor)
+        self.output.ensureCursorVisible()
 
     def __del__(self):
         sys.stdout = sys.__stdout__
 
+    def process_link(self, url: str , length: int) -> list:
+        
+        unprocessed_links = deque([url])
 
+        processed_url = []
+        emails  = set()
+
+        count = 0
+
+        
+        while unprocessed_links:
+            count += 1
+            if count == length:
+                break
+
+            url = unprocessed_links.popleft()
+            processed_url.append(url)
+            # print("urls: %s" %url)
+
+            parts = urllib.parse.urlsplit(url)
+            base = f"{parts.scheme}://{parts.netloc}"
+            path = url[:url.rfind("/")+1] if "/" in parts.path else url
+            # print(path)
+            
+            if url.startswith("https://"):
+                url = url
+            else:
+                url = "https://"+url
+
+            try:
+                response = requests.get(url, timeout=10)
+                    
+            except(requests.exceptions.ConnectionError,requests.exceptions.ReadTimeout):
+                self.ui.extracting.setStyleSheet("color: rgb(224, 27, 36);")
+                self.ui.extracting.setText("connection error")
+
+            # self.ui.process_output.append(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
+            # print(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
+
+
+            new_email = re.findall(r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+", response.text, re.I)
+            emails.update(new_email)
+
+            soup = BeautifulSoup(response.text, "html.parser")
+
+
+            for anchor in soup.find_all("a"):
+                link =  anchor.attrs["href"] if "href" in anchor.attrs else ""
+                if link.startswith("/"):
+                    link = base + link
+                if not link.startswith("http"):
+                    link = path + link
+                if not link in unprocessed_links or not link in processed_url:
+                    if "youtube" in link or "payments" in link or "myaccount.google.com" in link or "support.google.com" in link or "policies" in link or "payments" in link:
+                        pass
+                    else:
+                        unprocessed_links.append(link)
+                    
+
+        return emails
+
+
+
+    def extract(self, urls: list, length: int = 5) -> set:
+
+        # print(urls)
+
+        # queue of urls to be crawled
+        unprocessed_urls = deque(urls)
+
+        # set of already crawled urls for email
+        processed_urls = []
+
+        # all emails goten from the links
+        all_emails = set()
+        count = 0
+
+        while unprocessed_urls:
+
+            url = unprocessed_urls.popleft()
+            processed_urls.append(url)
+
+            # print(" processing url: %s" % url + "\n \n")
+            self.ui.process_output.setText(" processing url: %s" % url + "\n \n")
+            count += 1
+            mails = self.process_link(url, length)
+
+            for mail in mails:
+                all_emails.add(mail)
+
+
+        # for mail in mails :
+        #     with open("mails.txt", "a") as f:
+        #         f.write(mail+"\n")
+        
+        # print("all emails has been saved ")
+        
+        
+        for mail in all_emails:
+            # self.ui.extracted_emails.append(mail)
+            print(mail)
+
+        self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
+        self.ui.extracting.setText("completed")
+        
     
-    # def gg(self):
-    #     for n in range(5):
-    #         time.sleep(1)
-    #         print("processing" + str(n))
 
     def link_extract(self):
-        print(self.depth)
+        # cursor = self.ui.process_output.textCursor()
+        # cursor.movePosition(QtGui.QTextCursor.End)
+        depth = self.ui.depth.value()
 
-        t1 = threading.Thread(target=extract, args=())
-        # t1.start()
+        self.ui.process_output.clear()
+        self.ui.extracted_emails.clear()
+        urls = str(self.ui.link_input.text()).split(',')
+
+        self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
+        self.ui.extracting.setText("Extracting ...")
+            
+
+        thread = threading.Thread(target=self.extract, args=(urls, depth) )
+        thread.start()
+
         
         
+        
 
-        link = str(self.ui.link_input.text()).split(',')
-        print(link)
+        # link = str(self.ui.link_input.text()).split(',')
+        # print(link)
 
 
 
