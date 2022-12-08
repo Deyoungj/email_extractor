@@ -48,9 +48,12 @@ class Ui_Window(QtWidgets.QMainWindow):
         
         # depth of the link
         
-        self.output = self.ui.extracted_emails
+        self.output = self.ui.process_output
 
         sys.stdout = Stream(newText=self.onUpdateText)
+
+
+        self.txt =""""""
 
 
 
@@ -60,6 +63,7 @@ class Ui_Window(QtWidgets.QMainWindow):
         cursor.insertText(text)
         self.output.setTextCursor(cursor)
         self.output.ensureCursorVisible()
+
 
     def __del__(self):
         sys.stdout = sys.__stdout__
@@ -100,8 +104,8 @@ class Ui_Window(QtWidgets.QMainWindow):
                 self.ui.extracting.setStyleSheet("color: rgb(224, 27, 36);")
                 self.ui.extracting.setText("connection error")
 
-            # self.ui.process_output.append(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
-            # print(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
+            
+            print(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
 
 
             new_email = re.findall(r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+", response.text, re.I)
@@ -146,8 +150,8 @@ class Ui_Window(QtWidgets.QMainWindow):
             url = unprocessed_urls.popleft()
             processed_urls.append(url)
 
-            # print(" processing url: %s" % url + "\n \n")
-            self.ui.process_output.setText(" processing url: %s" % url + "\n \n")
+            print(" processing url: %s" % url + "\n \n")
+            # self.ui.process_output.setText(" processing url: %s" % url + "\n \n")
             count += 1
             mails = self.process_link(url, length)
 
@@ -164,35 +168,52 @@ class Ui_Window(QtWidgets.QMainWindow):
         
         for mail in all_emails:
             # self.ui.extracted_emails.append(mail)
-            print(mail)
-
+            self.txt += mail+' \n'
+        
+        
         self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
         self.ui.extracting.setText("completed")
+        self.show_mails()
         
-    
+    def show_mails(self):
+        self.ui.process_output.setText(self.txt)
 
     def link_extract(self):
         # cursor = self.ui.process_output.textCursor()
         # cursor.movePosition(QtGui.QTextCursor.End)
-        depth = self.ui.depth.value()
 
-        self.ui.process_output.clear()
-        self.ui.extracted_emails.clear()
-        urls = str(self.ui.link_input.text()).split(',')
+        # text = self.ui.link_input.text()
+        if  self.ui.link_input.text() == '':
+            self.ui.extracting.setStyleSheet("color: rgb(224, 27, 36);")
+            self.ui.extracting.setText("no url found")
+            print("no url found")
 
-        self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
-        self.ui.extracting.setText("Extracting ...")
+        else:
+
+            print(self.ui.link_input.text())
+            print("hello")
+
+            depth = self.ui.depth.value()
+
+            self.ui.process_output.clear() 
+            urls = str(self.ui.link_input.text()).split(',')
+
+            self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
+            self.ui.extracting.setText("Extracting ...")
+
+            # print(self.ui.link_input.text())
+            # print("hello")
             
 
-        thread = threading.Thread(target=self.extract, args=(urls, depth) )
-        thread.start()
+            thread = threading.Thread(target=self.extract, args=(urls, depth) )
+            thread.start()
 
-        
-        
-        
+            
+            
+            
 
-        # link = str(self.ui.link_input.text()).split(',')
-        # print(link)
+            # link = str(self.ui.link_input.text()).split(',')
+            # print(link)
 
 
 
