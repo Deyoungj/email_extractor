@@ -2,7 +2,7 @@ from extractor_ui import Ui_mainWindow
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 import concurrent.futures
-import threading
+from threading import Thread
 from extractor_script import extract
 import requests, re
 from bs4 import BeautifulSoup
@@ -10,7 +10,18 @@ from collections import deque
 import urllib
 
 
+class CustomThread(Thread):
+    def __init__(self,group=None, target=None,name=None, args=(), kwargs={}, verbose=None):
+        Thread.__init__(self,group, target, name, args, kwargs)
 
+        self._return_value = None
+
+    def run(self):
+        if self._target is not None:
+
+            self._return_value = self._target(*self._args, **self._kwargs)
+
+            return self._return_value
 
 
 class Stream(QtCore.QObject):
@@ -53,7 +64,7 @@ class Ui_Window(QtWidgets.QMainWindow):
         sys.stdout = Stream(newText=self.onUpdateText)
 
 
-        self.txt =""""""
+        self.emails_extracted_list =""""""
 
 
 
@@ -121,7 +132,7 @@ class Ui_Window(QtWidgets.QMainWindow):
                 if not link.startswith("http"):
                     link = path + link
                 if not link in unprocessed_links or not link in processed_url:
-                    if "youtube" in link or "payments" in link or "myaccount.google.com" in link or "support.google.com" in link or "policies" in link or "payments" in link:
+                    if "youtube" in link or "payments" in link or "myaccount.google.com" in link or "support.google.com" in link or "policies" in link or "play.google.com" in link or "map.google.com" in link or "mail.google.com" in link or "news.google.com" in link or "drive.google.com" in link or "history" in link or "advanced_search" in link or "preferences" in link:
                         pass
                     else:
                         unprocessed_links.append(link)
@@ -168,15 +179,14 @@ class Ui_Window(QtWidgets.QMainWindow):
         
         for mail in all_emails:
             # self.ui.extracted_emails.append(mail)
-            self.txt += mail+' \n'
+            self.emails_extracted_list += mail+' \n'
         
         
         self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
         self.ui.extracting.setText("completed")
-        self.show_mails()
+
         
-    def show_mails(self):
-        self.ui.process_output.setText(self.txt)
+
 
     def link_extract(self):
         # cursor = self.ui.process_output.textCursor()
@@ -186,12 +196,12 @@ class Ui_Window(QtWidgets.QMainWindow):
         if  self.ui.link_input.text() == '':
             self.ui.extracting.setStyleSheet("color: rgb(224, 27, 36);")
             self.ui.extracting.setText("no url found")
-            print("no url found")
+            
 
         else:
 
             print(self.ui.link_input.text())
-            print("hello")
+            
 
             depth = self.ui.depth.value()
 
@@ -200,13 +210,15 @@ class Ui_Window(QtWidgets.QMainWindow):
 
             self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
             self.ui.extracting.setText("Extracting ...")
+            # print("hello")
 
             # print(self.ui.link_input.text())
             # print("hello")
             
 
-            thread = threading.Thread(target=self.extract, args=(urls, depth) )
+            thread = CustomThread(target=self.extract, args=(urls, depth) )
             thread.start()
+            print(thread._return_value)
 
             
             
