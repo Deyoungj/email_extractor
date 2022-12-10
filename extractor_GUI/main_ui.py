@@ -1,8 +1,10 @@
 from extractor_ui import Ui_mainWindow
 import sys
+import os
 from PyQt5 import QtWidgets, QtCore, QtGui
-import concurrent.futures
-from threading import Thread
+from qt_thread_updater import get_updater
+import time
+import threading
 from extractor_script import extract
 import requests, re
 from bs4 import BeautifulSoup
@@ -10,9 +12,9 @@ from collections import deque
 import urllib
 
 
-class CustomThread(Thread):
+class CustomThread(threading.Thread):
     def __init__(self,group=None, target=None,name=None, args=(), kwargs={}, verbose=None):
-        Thread.__init__(self,group, target, name, args, kwargs)
+        threading.Thread.__init__(self,group, target, name, args, kwargs)
 
         self._return_value = None
 
@@ -22,6 +24,7 @@ class CustomThread(Thread):
             self._return_value = self._target(*self._args, **self._kwargs)
 
             return self._return_value
+
 
 
 class Stream(QtCore.QObject):
@@ -39,17 +42,30 @@ class Ui_Window(QtWidgets.QMainWindow):
         self.ui = Ui_mainWindow()
         self.ui.setupUi(self)
 
-        
+        self.kill = False
+
+        mail_to_extract = {
+            "All": r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+",
+            "gmail": '',
+            "hotmail": '',
+            "sbc": '',
+            "yahoo": '',
+            "outlook": "",
+            "live": "",
+            "msn": "" 
+        }
+
+        self.home = os.path.expanduser('~')
+        self.filter = "txt(*.txt)"
 
         # buttons in the link extract tab
         self.ui.link_cancel_btn.setEnabled(False)
-        if self.ui.extracted_emails.toPlainText() == "":
-            self.ui.save_to_file_btn.setEnabled(False)
+        # if self.ui.extracted_emails.toPlainText() == "":
+        #     self.ui.save_to_file_btn.setEnabled(False)
 
         self.ui.link_extract_btn.clicked.connect(self.link_extract)
         self.ui.link_cancel_btn.clicked.connect(self.link_cancel)
         self.ui.save_to_file_btn.clicked.connect(self.link_save)
-        self.ui.path_to_save_btn.clicked.connect(self.save_path)
         
         
         # buttons in the text extract tab
@@ -79,7 +95,9 @@ class Ui_Window(QtWidgets.QMainWindow):
     def __del__(self):
         sys.stdout = sys.__stdout__
 
-    def process_link(self, url: str , length: int) -> list:
+
+
+    def process_link(self, url: str , length: int, email_type = '') -> list:
         
         unprocessed_links = deque([url])
 
@@ -92,6 +110,9 @@ class Ui_Window(QtWidgets.QMainWindow):
         while unprocessed_links:
             count += 1
             if count == length:
+                break
+
+            if self.kill:
                 break
 
             url = unprocessed_links.popleft()
@@ -121,6 +142,7 @@ class Ui_Window(QtWidgets.QMainWindow):
 
             new_email = re.findall(r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+", response.text, re.I)
             emails.update(new_email)
+            # print(new_email)
 
             soup = BeautifulSoup(response.text, "html.parser")
 
@@ -136,13 +158,17 @@ class Ui_Window(QtWidgets.QMainWindow):
                         pass
                     else:
                         unprocessed_links.append(link)
+
+        for mail in emails:
+            get_updater().call_in_main(self.ui.extracted_emails.append, mail)
+            time.sleep(0.01)
                     
 
         return emails
 
 
 
-    def extract(self, urls: list, length: int = 5) -> set:
+    def extract(self, urls: list, length: int = 5, email_type = '') -> set:
 
         # print(urls)
 
@@ -158,8 +184,12 @@ class Ui_Window(QtWidgets.QMainWindow):
 
         while unprocessed_urls:
 
+            if self.kill:
+                break
+
             url = unprocessed_urls.popleft()
             processed_urls.append(url)
+
 
             print(" processing url: %s" % url + "\n \n")
             # self.ui.process_output.setText(" processing url: %s" % url + "\n \n")
@@ -189,23 +219,20 @@ class Ui_Window(QtWidgets.QMainWindow):
 
 
     def link_extract(self):
-        # cursor = self.ui.process_output.textCursor()
-        # cursor.movePosition(QtGui.QTextCursor.End)
-
+       
         # text = self.ui.link_input.text()
         if  self.ui.link_input.text() == '':
             self.ui.extracting.setStyleSheet("color: rgb(224, 27, 36);")
             self.ui.extracting.setText("no url found")
             
-
         else:
-
-            print(self.ui.link_input.text())
             
-
+            self.ui.link_cancel_btn.setEnabled(True)
+            self.ui.link_extract_btn.setEnabled(False)
             depth = self.ui.depth.value()
 
-            self.ui.process_output.clear() 
+            self.ui.process_output.clear()
+            self.ui.extracted_emails.clear() 
             urls = str(self.ui.link_input.text()).split(',')
 
             self.ui.extracting.setStyleSheet("color: rgb(87, 227, 137);")
@@ -215,29 +242,41 @@ class Ui_Window(QtWidgets.QMainWindow):
             # print(self.ui.link_input.text())
             # print("hello")
             
-
+            alive = threading.Event()
             thread = CustomThread(target=self.extract, args=(urls, depth) )
             thread.start()
-            print(thread._return_value)
-
-            
-            
             
 
-            # link = str(self.ui.link_input.text()).split(',')
-            # print(link)
 
 
 
 
     def link_cancel(self):
-        pass
+        self.ui.link_cancel_btn.setEnabled(False)
+        self.ui.link_extract_btn.setEnabled(True)
+        self.kill = True
 
     def save_path(self):
         pass
 
     def link_save(self):
-            pass
+        email = self.ui.extracted_emails.toPlainText()
+
+        email_type = self.ui.mail_type.currentText()
+        print(email_type)
+
+        # name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', self.home, self.filter)
+        # file_path = ''
+
+        # if name[0].endswith('.txt') :
+        #     file_path = name[0]
+
+        # else:
+        #     file_path = name[0]+".txt"
+
+        # with open(file_path, "w") as f:
+        #     f.write(email)
+        
 
     def text_extract(self):
         pass

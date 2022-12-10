@@ -20,7 +20,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icons8-mail-100.png</normaloff>icons8-mail-100.png</iconset>
+    <normaloff>../../../.designer/backup/icons8-mail-100.png</normaloff>../../../.designer/backup/icons8-mail-100.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -115,6 +115,9 @@
               </item>
               <item>
                <widget class="QLineEdit" name="link_input">
+                <property name="styleSheet">
+                 <string notr="true">font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
+                </property>
                 <property name="maxLength">
                  <number>999999999</number>
                 </property>
@@ -275,7 +278,7 @@ color: rgb(229, 165, 10);</string>
                     <item>
                      <widget class="QLabel" name="extracting">
                       <property name="styleSheet">
-                       <string notr="true">font: 57 13pt &quot;Roboto Mono Medium for Powerline&quot;;
+                       <string notr="true">font: 57 11pt &quot;Roboto Mono Medium for Powerline&quot;;
 color: rgb(87, 227, 137);</string>
                       </property>
                       <property name="text">
@@ -408,7 +411,7 @@ color: rgb(255, 255, 255);</string>
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_12">
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
                  <property name="spacing">
                   <number>1</number>
                  </property>
@@ -426,8 +429,11 @@ color: rgb(255, 255, 255);</string>
                  </property>
                  <item>
                   <widget class="QPushButton" name="save_to_file_btn">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(98, 160, 234);</string>
+                   </property>
                    <property name="text">
-                    <string>Save to file</string>
+                    <string>Save</string>
                    </property>
                   </widget>
                  </item>
@@ -459,17 +465,54 @@ color: rgb(255, 255, 255);</string>
                   <number>1</number>
                  </property>
                  <item>
-                  <widget class="QLineEdit" name="lineEdit">
-                   <property name="readOnly">
-                    <bool>true</bool>
+                  <widget class="QLabel" name="label_4">
+                   <property name="text">
+                    <string>Email Type:</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="path_to_save_btn">
-                   <property name="text">
-                    <string>path to save</string>
-                   </property>
+                  <widget class="QComboBox" name="mail_type">
+                   <item>
+                    <property name="text">
+                     <string>All</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>gmail</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>hotmail</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>sbc</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>yahoo</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>outlook</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>live</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>msn</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>
@@ -512,7 +555,7 @@ color: rgb(255, 255, 255);</string>
                     <number>1</number>
                    </property>
                    <property name="maximum">
-                    <number>500</number>
+                    <number>300</number>
                    </property>
                    <property name="value">
                     <number>100</number>
@@ -591,6 +634,9 @@ color: rgb(255, 255, 255);</string>
                  </item>
                  <item>
                   <widget class="QTextEdit" name="extracted_emails">
+                   <property name="styleSheet">
+                    <string notr="true">font: 57 11pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
+                   </property>
                    <property name="placeholderText">
                     <string>all extractd emails will appear here</string>
                    </property>
@@ -635,6 +681,10 @@ color: rgb(255, 255, 255);</string>
                  </item>
                  <item>
                   <widget class="QTextEdit" name="process_output">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(87, 227, 137);
+font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
+                   </property>
                    <property name="readOnly">
                     <bool>true</bool>
                    </property>
