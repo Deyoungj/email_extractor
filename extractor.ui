@@ -320,7 +320,7 @@ color: rgb(255, 255, 255);</string>
                     <string>Extract</string>
                    </property>
                    <property name="checkable">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                    <property name="checked">
                     <bool>false</bool>
@@ -490,12 +490,22 @@ color: rgb(255, 255, 255);</string>
                    </item>
                    <item>
                     <property name="text">
-                     <string>sbc</string>
+                     <string>yahoo</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>yahoo</string>
+                     <string>att</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>rocketmail</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>sbcglobal</string>
                     </property>
                    </item>
                    <item>
@@ -511,6 +521,61 @@ color: rgb(255, 255, 255);</string>
                    <item>
                     <property name="text">
                      <string>msn</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>aol</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>wanadoo</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>orange</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>rediffmail</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>free</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>gmx</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>blueyonder</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>skynet</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>comcast</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>laposte</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>bellsouth</string>
                     </property>
                    </item>
                   </widget>
@@ -635,7 +700,8 @@ color: rgb(255, 255, 255);</string>
                  <item>
                   <widget class="QTextEdit" name="extracted_emails">
                    <property name="styleSheet">
-                    <string notr="true">font: 57 11pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
+                    <string notr="true">font: 57 11pt &quot;Roboto Mono Medium for Powerline&quot;;
+</string>
                    </property>
                    <property name="placeholderText">
                     <string>all extractd emails will appear here</string>
@@ -798,7 +864,11 @@ font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
                <number>2</number>
               </property>
               <item>
-               <widget class="QTextEdit" name="Text_to_extract"/>
+               <widget class="QTextEdit" name="Text_to_extract">
+                <property name="styleSheet">
+                 <string notr="true">font: 57 11pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -899,7 +969,11 @@ font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
                <number>1</number>
               </property>
               <item>
-               <widget class="QTextEdit" name="text_email_extract"/>
+               <widget class="QTextEdit" name="text_email_extract">
+                <property name="styleSheet">
+                 <string notr="true">font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>

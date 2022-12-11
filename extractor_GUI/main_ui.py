@@ -44,15 +44,27 @@ class Ui_Window(QtWidgets.QMainWindow):
 
         self.kill = False
 
-        mail_to_extract = {
-            "All": r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+",
-            "gmail": '',
-            "hotmail": '',
-            "sbc": '',
-            "yahoo": '',
-            "outlook": "",
-            "live": "",
-            "msn": "" 
+        self.mail_type = {
+            "All": r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z\.]+",
+            "gmail": r"[a-zA-Z0-9\.\-+_]+@gmail+\.[a-z\.]+",
+            "hotmail": r"[a-zA-Z0-9\.\-+_]+@hotmail+\.[a-z\.]+",
+            "sbcglobal": r"[a-zA-Z0-9\.\-+_]+@sbcglobal+\.[a-z\.]+",
+            "yahoo": r"[a-zA-Z0-9\.\-+_]+@yahoo+\.[a-z\.]+",
+            "outlook": r"[a-zA-Z0-9\.\-+_]+@outlook+\.[a-z\.]+",
+            "live": r"[a-zA-Z0-9\.\-+_]+@live+\.[a-z\.]+",
+            "att": r"[a-zA-Z0-9\.\-+_]+@att+\.[a-z\.]+",
+            "rocketmail": r"[a-zA-Z0-9\.\-+_]+@rocketmail+\.[a-z\.]+",
+            "aol": r"[a-zA-Z0-9\.\-+_]+@aol+\.[a-z\.]+",
+            "wanadoo": r"[a-zA-Z0-9\.\-+_]+@wanadoo+\.[a-z\.]+",
+            "orange": r"[a-zA-Z0-9\.\-+_]+@orange+\.[a-z\.]+",
+            "rediffmail": r"[a-zA-Z0-9\.\-+_]+@rediffmail+\.[a-z\.]+",
+            "free": r"[a-zA-Z0-9\.\-+_]+@free+\.[a-z\.]+",
+            "gmx": r"[a-zA-Z0-9\.\-+_]+@gmx+\.[a-z\.]+",
+            "blueyonder": r"[a-zA-Z0-9\.\-+_]+@blueyonder+\.[a-z\.]+",
+            "skynet": r"[a-zA-Z0-9\.\-+_]+@skynet+\.[a-z\.]+",
+            "comcast": r"[a-zA-Z0-9\.\-+_]+@comcast+\.[a-z\.]+",
+            "bellsouth": r"[a-zA-Z0-9\.\-+_]+@bellsouth+\.[a-z\.]+",
+            "laposte": r"[a-zA-Z0-9\.\-+_]+@laposte+\.[a-z\.]+",
         }
 
         self.home = os.path.expanduser('~')
@@ -60,8 +72,8 @@ class Ui_Window(QtWidgets.QMainWindow):
 
         # buttons in the link extract tab
         self.ui.link_cancel_btn.setEnabled(False)
-        # if self.ui.extracted_emails.toPlainText() == "":
-        #     self.ui.save_to_file_btn.setEnabled(False)
+        if self.ui.text_email_extract.toPlainText() == "":
+            self.ui.text_save_btn.setEnabled(False)
 
         self.ui.link_extract_btn.clicked.connect(self.link_extract)
         self.ui.link_cancel_btn.clicked.connect(self.link_cancel)
@@ -97,7 +109,7 @@ class Ui_Window(QtWidgets.QMainWindow):
 
 
 
-    def process_link(self, url: str , length: int, email_type = '') -> list:
+    def process_link(self, url: str , length: int, email_regx = '') -> list:
         
         unprocessed_links = deque([url])
 
@@ -135,12 +147,20 @@ class Ui_Window(QtWidgets.QMainWindow):
             except(requests.exceptions.ConnectionError,requests.exceptions.ReadTimeout):
                 self.ui.extracting.setStyleSheet("color: rgb(224, 27, 36);")
                 self.ui.extracting.setText("connection error")
-
             
-            print(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
+
+                
+            if response.status_code != 200:
+                self.ui.process_output.setStyle("color: rgb(224, 27, 36);")
+                print(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
+                self.ui.process_output.setStyle("color: rgb(0, 0, 0));")
+
+            else:
+                self.ui.process_output.setStyle("color: rgb(0, 0, 0));")
+                print(f"--------[{count}]**  processing link: [{url}] **status: [{response.status_code}] \n")
 
 
-            new_email = re.findall(r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+", response.text, re.I)
+            new_email = re.findall(email_regx, response.text, re.I)
             emails.update(new_email)
             # print(new_email)
 
@@ -168,7 +188,7 @@ class Ui_Window(QtWidgets.QMainWindow):
 
 
 
-    def extract(self, urls: list, length: int = 5, email_type = '') -> set:
+    def extract(self, urls: list, length: int = 5, email_regx = '') -> set:
 
         # print(urls)
 
@@ -194,7 +214,7 @@ class Ui_Window(QtWidgets.QMainWindow):
             print(" processing url: %s" % url + "\n \n")
             # self.ui.process_output.setText(" processing url: %s" % url + "\n \n")
             count += 1
-            mails = self.process_link(url, length)
+            mails = self.process_link(url, length, email_regx)
 
             for mail in mails:
                 all_emails.add(mail)
@@ -216,8 +236,6 @@ class Ui_Window(QtWidgets.QMainWindow):
         self.ui.extracting.setText("completed")
 
         
-
-
     def link_extract(self):
        
         # text = self.ui.link_input.text()
@@ -230,6 +248,8 @@ class Ui_Window(QtWidgets.QMainWindow):
             self.ui.link_cancel_btn.setEnabled(True)
             self.ui.link_extract_btn.setEnabled(False)
             depth = self.ui.depth.value()
+            email_type = self.ui.mail_type.currentText()
+            mail_regx = self.mail_type[email_type]
 
             self.ui.process_output.clear()
             self.ui.extracted_emails.clear() 
@@ -243,12 +263,16 @@ class Ui_Window(QtWidgets.QMainWindow):
             # print("hello")
             
             alive = threading.Event()
-            thread = CustomThread(target=self.extract, args=(urls, depth) )
+            thread = CustomThread(target=self.extract, args=(urls, depth, mail_regx) )
             thread.start()
             
+    def text_extract_mails(self):
+        text = self.ui.Text_to_extract.toPlainText()
+        self.ui.text_email_extract.setText(text)
 
-
-
+        new_email = re.findall(r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+", text, re.I)
+        for mail in new_email:
+            self.ui.text_email_extract.append(mail)
 
 
     def link_cancel(self):
@@ -256,33 +280,41 @@ class Ui_Window(QtWidgets.QMainWindow):
         self.ui.link_extract_btn.setEnabled(True)
         self.kill = True
 
-    def save_path(self):
-        pass
 
     def link_save(self):
         email = self.ui.extracted_emails.toPlainText()
 
-        email_type = self.ui.mail_type.currentText()
-        print(email_type)
 
-        # name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', self.home, self.filter)
-        # file_path = ''
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', self.home, self.filter)
+        file_path = ''
 
-        # if name[0].endswith('.txt') :
-        #     file_path = name[0]
+        if name[0].endswith('.txt') :
+            file_path = name[0]
 
-        # else:
-        #     file_path = name[0]+".txt"
+        else:
+            file_path = name[0]+".txt"
 
-        # with open(file_path, "w") as f:
-        #     f.write(email)
+        with open(file_path, "w") as f:
+            f.write(email)
         
 
     def text_extract(self):
-        pass
+        self.text_extract_mails()
+        self.ui.text_save_btn.setEnabled(True)
 
     def text_save(self):
-        pass
+        email = self.ui.text_email_extract.toPlainText()
+        name = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', self.home, self.filter)
+        file_path = ''
+
+        if name[0].endswith('.txt') :
+            file_path = name[0]
+
+        else:
+            file_path = name[0]+".txt"
+
+        with open(file_path, "w") as f:
+            f.write(email)
 
     
 
