@@ -267,10 +267,11 @@ class Ui_Window(QtWidgets.QMainWindow):
             thread.start()
             
     def text_extract_mails(self):
+        self.ui.text_email_extract.clear()
+        text_mail_type = self.ui.text_mail_type.currentText()
         text = self.ui.Text_to_extract.toPlainText()
-        self.ui.text_email_extract.setText(text)
 
-        new_email = re.findall(r"[a-zA-Z0-9\.\-+_]+@[a-zA-Z0-9\.\-+_]+\.[a-z]+", text, re.I)
+        new_email = re.findall(self.mail_type[text_mail_type], text, re.I)
         for mail in new_email:
             self.ui.text_email_extract.append(mail)
 
@@ -294,7 +295,7 @@ class Ui_Window(QtWidgets.QMainWindow):
         else:
             file_path = name[0]+".txt"
 
-        with open(file_path, "w") as f:
+        with open(file_path, "a") as f:
             f.write(email)
         
 
@@ -313,7 +314,7 @@ class Ui_Window(QtWidgets.QMainWindow):
         else:
             file_path = name[0]+".txt"
 
-        with open(file_path, "w") as f:
+        with open(file_path, "a") as f:
             f.write(email)
 
     

@@ -864,11 +864,7 @@ font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
                <number>2</number>
               </property>
               <item>
-               <widget class="QTextEdit" name="Text_to_extract">
-                <property name="styleSheet">
-                 <string notr="true">font: 57 11pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
-                </property>
-               </widget>
+               <widget class="QPlainTextEdit" name="Text_to_extract"/>
               </item>
              </layout>
             </widget>
@@ -909,6 +905,115 @@ font: 57 10pt &quot;Roboto Mono Medium for Powerline&quot;;</string>
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <item>
+               <widget class="QComboBox" name="text_mail_type">
+                <item>
+                 <property name="text">
+                  <string>All</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>gmail</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>hotmail</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>yahoo</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>att</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>rocketmail</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>sbcglobal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>outlook</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>live</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>msn</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>aol</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>wanadoo</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>orange</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>rediffmail</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>free</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>gmx</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>blueyonder</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>skynet</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>comcast</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>laposte</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>bellsouth</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
               <item>
                <widget class="QPushButton" name="text_extract_btn">
                 <property name="styleSheet">
